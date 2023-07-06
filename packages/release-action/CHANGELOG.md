@@ -1,5 +1,11 @@
 # @rocket.chat/release-action
 
+## 1.1.0
+
+### Minor Changes
+
+- 22e4e99fb8: fix tag
+
 ## 1.0.1
 
 ### Patch Changes
