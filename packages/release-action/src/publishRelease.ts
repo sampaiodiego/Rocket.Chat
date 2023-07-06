@@ -81,14 +81,15 @@ export async function publishRelease({
 
 	// merge release changes to master
 	await exec('git', ['checkout', 'master']);
-	await exec('git', ['merge', '--no-ff', '--no-edit', branchName.trim()]);
+	await exec('git', ['merge', '--no-edit', branchName.trim()]);
 
 	core.info('fix dependencies in workspace packages');
 	await fixWorkspaceVersionsBeforePublish();
 
 	await exec('yarn', ['changeset', 'publish', '--no-git-tag']);
 
-	await exec('git', ['tag', newVersion]);
+	// create an annotated tag so git push --follow-tags will push the tag
+	await exec('git', ['tag', newVersion, '-m', newVersion]);
 
 	await exec('git', ['push', '--follow-tags']);
 
@@ -97,7 +98,6 @@ export async function publishRelease({
 		name: newVersion,
 		tag_name: newVersion,
 		body: releaseBody,
-		draft: true,
 		prerelease: newVersion.includes('-'),
 		...github.context.repo,
 	});
