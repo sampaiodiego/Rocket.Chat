@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { exec } from '@actions/exec';
+import { exec, getExecOutput } from '@actions/exec';
 import * as github from '@actions/github';
 import * as core from '@actions/core';
 
@@ -76,6 +76,13 @@ export async function publishRelease({
 	await exec('git', ['add', '.']);
 	await exec('git', ['commit', '-m', `Release ${newVersion}`]);
 
+	// get current branch name
+	const { stdout: branchName } = await getExecOutput('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
+
+	// merge release changes to master
+	await exec('git', ['checkout', 'master']);
+	await exec('git', ['merge', '--no-ff', '--no-edit', branchName.trim()]);
+
 	core.info('fix dependencies in workspace packages');
 	await fixWorkspaceVersionsBeforePublish();
 
@@ -85,11 +92,12 @@ export async function publishRelease({
 
 	await exec('git', ['push', '--follow-tags']);
 
-	core.info('create release');
+	core.info('create draft release');
 	await octokit.rest.repos.createRelease({
 		name: newVersion,
 		tag_name: newVersion,
 		body: releaseBody,
+		draft: true,
 		prerelease: newVersion.includes('-'),
 		...github.context.repo,
 	});
