@@ -1,5 +1,20 @@
 # @rocket.chat/release-action
 
+## 2.0.0
+
+### Major Changes
+
+- 956dbb552: New action to publish package releases
+
+### Minor Changes
+
+- ffb049fa: fix tag
+
+### Patch Changes
+
+- 677919a23: Use CI user PAT token
+- 677919a23: Update versions in configured files
+
 ## 1.0.1
 
 ### Patch Changes

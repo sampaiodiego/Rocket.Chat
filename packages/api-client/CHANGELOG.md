@@ -1,5 +1,26 @@
 # @rocket.chat/api-client
 
+## 0.1.0
+
+### Minor Changes
+
+- 40cebcc0f: Moved from patch monkey solution to official one
+- 40cebcc0f: ask for totp if the provided one is invalid
+
+### Patch Changes
+
+- e006013e5: chore: New Livechat SDK Implementation
+- Updated dependencies [e14ec5081]
+- Updated dependencies [74aa6770]
+- Updated dependencies [e006013e5]
+- Updated dependencies [eecd9fc9]
+- Updated dependencies [6a474ff95]
+- Updated dependencies [9da856cc6]
+- Updated dependencies [12d97e16c]
+- Updated dependencies [0645f42e1]
+  - @rocket.chat/core-typings@6.3.0
+  - @rocket.chat/rest-typings@6.3.0
+
 ## 0.0.5
 
 ### Patch Changes
