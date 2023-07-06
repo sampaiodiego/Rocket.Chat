@@ -8,6 +8,7 @@ import type {
 	ILoginToken,
 	IPersonalAccessToken,
 	AtLeast,
+	ILivechatAgentStatus,
 } from '@rocket.chat/core-typings';
 
 import type { FindPaginated, IBaseModel } from './IBaseModel';
@@ -68,6 +69,8 @@ export interface IUsersModel extends IBaseModel<IUser> {
 
 	findOneByUsernameIgnoringCase<T = IUser>(username: any, options?: any): Promise<T>;
 
+	findOneWithoutLDAPByUsernameIgnoringCase<T = IUser>(username: string, options?: any): Promise<T>;
+
 	findOneByLDAPId<T = IUser>(id: any, attribute?: any): Promise<T>;
 
 	findOneByAppId<T = IUser>(appId: string, options?: FindOptions<IUser>): Promise<T | null>;
@@ -91,7 +94,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 
 	setLastRoutingTime(userId: any): Promise<number>;
 
-	setLivechatStatusIf(userId: any, status: any, conditions?: any, extraFields?: any): Promise<UpdateResult>;
+	setLivechatStatusIf(userId: string, status: ILivechatAgentStatus, conditions?: any, extraFields?: any): Promise<UpdateResult>;
 	getAgentAndAmountOngoingChats(
 		userId: any,
 	): Promise<{ agentId: string; username: string; lastAssignTime: Date; lastRoutingTime: Date; queueInfo: { chats: number } }>;
@@ -127,7 +130,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 
 	openAgentBusinessHoursByBusinessHourIdsAndAgentId(businessHourIds: any, agentId: any): any;
 
-	addBusinessHourByAgentIds(agentIds: any, businessHourId: any): any;
+	addBusinessHourByAgentIds(agentIds: string[], businessHourId: string): any;
 
 	removeBusinessHourByAgentIds(agentIds: any, businessHourId: any): any;
 
@@ -141,7 +144,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 
 	setLivechatStatusActiveBasedOnBusinessHours(userId: any): any;
 
-	isAgentWithinBusinessHours(agentId: any): Promise<any>;
+	isAgentWithinBusinessHours(agentId: string): Promise<boolean>;
 
 	removeBusinessHoursFromAllUsers(): any;
 
@@ -208,6 +211,8 @@ export interface IUsersModel extends IBaseModel<IUser> {
 	addServerNameToSearchedServerNamesList(userId: string, serverName: string): Promise<UpdateResult>;
 
 	removeServerNameFromSearchedServerNamesList(userId: string, serverName: string): Promise<UpdateResult>;
+
+	countFederatedExternalUsers(): Promise<number>;
 	findOnlineUserFromList(userList: string[], isLivechatEnabledWhenAgentIdle?: boolean): FindCursor<IUser>;
 	getUnavailableAgents(
 		departmentId?: string,
@@ -228,7 +233,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 		isLivechatEnabledWhenAgentIdle?: boolean,
 	): Promise<IUser | null>;
 
-	findBotAgents(usernameList: string[]): FindCursor<IUser>;
+	findBotAgents(usernameList?: string[]): FindCursor<IUser>;
 	removeAllRoomsByUserId(userId: string): Promise<UpdateResult>;
 	removeRoomByUserId(userId: string, rid: string): Promise<UpdateResult>;
 	addRoomByUserId(userId: string, rid: string): Promise<UpdateResult>;
@@ -241,8 +246,8 @@ export interface IUsersModel extends IBaseModel<IUser> {
 	}): Promise<UpdateResult>;
 	findPersonalAccessTokenByTokenNameAndUserId(data: { userId: string; tokenName: string }): Promise<IPersonalAccessToken | null>;
 	setOperator(userId: string, operator: boolean): Promise<UpdateResult>;
-	checkOnlineAgents(agentId: string): Promise<boolean>;
-	findOnlineAgents(agentId: string): FindCursor<ILivechatAgent>;
+	checkOnlineAgents(agentId?: string): Promise<boolean>;
+	findOnlineAgents(agentId?: string): FindCursor<ILivechatAgent>;
 	countOnlineAgents(agentId: string): Promise<number>;
 	findOneBotAgent(): Promise<ILivechatAgent | null>;
 	findOneOnlineAgentById(agentId: string, isLivechatEnabledWhenAgentIdle?: boolean): Promise<ILivechatAgent | null>;
@@ -250,7 +255,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 	countAgents(): Promise<number>;
 	getNextAgent(ignoreAgentId?: string, extraQuery?: Filter<IUser>): Promise<{ agentId: string; username: string } | null>;
 	getNextBotAgent(ignoreAgentId?: string): Promise<{ agentId: string; username: string } | null>;
-	setLivechatStatus(userId: string, status: UserStatus): Promise<UpdateResult>;
+	setLivechatStatus(userId: string, status: ILivechatAgentStatus): Promise<UpdateResult>;
 	setLivechatData(userId: string, data?: Record<string, any>): Promise<UpdateResult>;
 	closeOffice(): Promise<void>;
 	openOffice(): Promise<void>;
@@ -288,6 +293,7 @@ export interface IUsersModel extends IBaseModel<IUser> {
 		options?: FindOptions<IUser>,
 	): Promise<IUser | null>;
 	findOneByEmailAddress(emailAddress: string, options?: FindOptions<IUser>): Promise<IUser | null>;
+	findOneWithoutLDAPByEmailAddress(emailAddress: string, options?: FindOptions<IUser>): Promise<IUser | null>;
 	findOneAdmin(userId: string, options?: FindOptions<IUser>): Promise<IUser | null>;
 	findOneByIdAndLoginToken(userId: string, loginToken: string, options?: FindOptions<IUser>): Promise<IUser | null>;
 	findOneActiveById(userId: string, options?: FindOptions<IUser>): Promise<IUser | null>;
@@ -370,4 +376,5 @@ export interface IUsersModel extends IBaseModel<IUser> {
 	countRoomMembers(roomId: string): Promise<number>;
 	countRemote(options?: FindOptions<IUser>): Promise<number>;
 	findOneByImportId(importId: string, options?: FindOptions<IUser>): Promise<IUser | null>;
+	removeAgent(_id: string): Promise<UpdateResult>;
 }

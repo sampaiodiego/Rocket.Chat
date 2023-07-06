@@ -18,7 +18,14 @@ export async function startPatchRelease({
 }) {
 	const octokit = setupOctokit(githubToken);
 
+	// checkout the branch we want to start the release from
 	await exec('git', ['checkout', baseRef]);
+
+	// make sure the release-automation branch is up to date
+	if (baseRef === 'master') {
+		await exec('git', ['checkout', '-b', 'release-automation']);
+		await exec('git', ['push', 'origin', '-f', 'HEAD:refs/heads/release-automation']);
+	}
 
 	// get version from main package
 	const { version } = await readPackageJson(mainPackagePath);
@@ -32,6 +39,8 @@ export async function startPatchRelease({
 
 	// TODO check if branch exists
 	await exec('git', ['checkout', '-b', newBranch]);
+
+	// TODO we can try to cherry picks from commits at this point already, just need to define where to get them from
 
 	// create empty changeset to have something to commit. the changeset file will be removed later in the process
 	core.info('create empty changeset');
