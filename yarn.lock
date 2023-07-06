@@ -9654,7 +9654,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rocket.chat/fuselage-ui-kit@workspace:^, @rocket.chat/fuselage-ui-kit@workspace:packages/fuselage-ui-kit, @rocket.chat/fuselage-ui-kit@workspace:~":
+"@rocket.chat/fuselage-ui-kit@workspace:^, @rocket.chat/fuselage-ui-kit@workspace:packages/fuselage-ui-kit":
   version: 0.0.0-use.local
   resolution: "@rocket.chat/fuselage-ui-kit@workspace:packages/fuselage-ui-kit"
   dependencies:
@@ -10804,7 +10804,7 @@ __metadata:
     "@rocket.chat/fuselage": next
     "@rocket.chat/fuselage-hooks": next
     "@rocket.chat/icons": next
-    "@rocket.chat/ui-contexts": "workspace:~"
+    "@rocket.chat/ui-contexts": "workspace:^"
     "@storybook/addon-actions": ~6.5.16
     "@storybook/addon-docs": ~6.5.16
     "@storybook/addon-essentials": ~6.5.16
@@ -10873,7 +10873,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@rocket.chat/ui-contexts@workspace:^, @rocket.chat/ui-contexts@workspace:packages/ui-contexts, @rocket.chat/ui-contexts@workspace:~":
+"@rocket.chat/ui-contexts@workspace:^, @rocket.chat/ui-contexts@workspace:packages/ui-contexts":
   version: 0.0.0-use.local
   resolution: "@rocket.chat/ui-contexts@workspace:packages/ui-contexts"
   dependencies:
@@ -10918,7 +10918,7 @@ __metadata:
     "@rocket.chat/fuselage": next
     "@rocket.chat/fuselage-hooks": next
     "@rocket.chat/icons": next
-    "@rocket.chat/ui-contexts": "workspace:~"
+    "@rocket.chat/ui-contexts": "workspace:^"
     "@storybook/addon-actions": ~6.5.16
     "@storybook/addon-docs": ~6.5.16
     "@storybook/addon-essentials": ~6.5.16
@@ -11005,11 +11005,11 @@ __metadata:
     "@rocket.chat/fuselage-hooks": next
     "@rocket.chat/fuselage-polyfills": next
     "@rocket.chat/fuselage-tokens": next
-    "@rocket.chat/fuselage-ui-kit": "workspace:~"
+    "@rocket.chat/fuselage-ui-kit": "workspace:^"
     "@rocket.chat/icons": next
     "@rocket.chat/logo": next
     "@rocket.chat/styled": next
-    "@rocket.chat/ui-contexts": "workspace:~"
+    "@rocket.chat/ui-contexts": "workspace:^"
     "@types/react": ^17.0.62
     "@types/react-beautiful-dnd": ^13.1.4
     "@types/react-dom": ^17.0.20
