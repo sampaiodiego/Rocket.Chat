@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-import { exec, getExecOutput } from '@actions/exec';
+import { exec } from '@actions/exec';
 import * as github from '@actions/github';
 import * as core from '@actions/core';
 
@@ -9,6 +9,7 @@ import { createNpmFile } from './createNpmFile';
 import { setupOctokit } from './setupOctokit';
 import { bumpFileVersions, getChangelogEntry, readPackageJson } from './utils';
 import { fixWorkspaceVersionsBeforePublish } from './fixWorkspaceVersionsBeforePublish';
+import { checkoutBranch, commitChanges, createTag, getCurrentBranch, mergeBranch, pushChanges } from './gitUtils';
 
 export async function publishRelease({
 	githubToken,
@@ -29,7 +30,7 @@ export async function publishRelease({
 	await createNpmFile();
 
 	if (baseRef) {
-		await exec('git', ['checkout', baseRef]);
+		await checkoutBranch(baseRef);
 	}
 
 	const { version: currentVersion } = await readPackageJson(cwd);
@@ -73,25 +74,23 @@ export async function publishRelease({
 	core.info('update version in all files to new');
 	await bumpFileVersions(cwd, currentVersion, newVersion);
 
-	await exec('git', ['add', '.']);
-	await exec('git', ['commit', '-m', `Release ${newVersion}`]);
+	await commitChanges(`Release ${newVersion}`);
 
 	// get current branch name
-	const { stdout: branchName } = await getExecOutput('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
+	const branchName = await getCurrentBranch();
 
 	// merge release changes to master
-	await exec('git', ['checkout', 'master']);
-	await exec('git', ['merge', '--no-edit', branchName.trim()]);
+	await checkoutBranch('master');
+	await mergeBranch(branchName);
 
 	core.info('fix dependencies in workspace packages');
 	await fixWorkspaceVersionsBeforePublish();
 
 	await exec('yarn', ['changeset', 'publish', '--no-git-tag']);
 
-	// create an annotated tag so git push --follow-tags will push the tag
-	await exec('git', ['tag', newVersion, '-m', newVersion]);
+	await createTag(newVersion);
 
-	await exec('git', ['push', '--follow-tags']);
+	await pushChanges();
 
 	core.info('create draft release');
 	await octokit.rest.repos.createRelease({
