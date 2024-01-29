@@ -1,0 +1,17 @@
+{
+	"name": "@rocket.chat/release-changelog",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"build": "tsc"
+	},
+	"main": "dist/index.js",
+	"devDependencies": {
+		"@changesets/types": "^6.0.0",
+		"@types/node": "^16.18.60",
+		"typescript": "~5.3.2"
+	},
+	"dependencies": {
+		"@changesets/get-github-info": "^0.6.0"
+	}
+}
